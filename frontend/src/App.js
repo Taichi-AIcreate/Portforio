@@ -1,24 +1,137 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { OrbitControls, Sphere, MeshDistortMaterial, Float } from "@react-three/drei";
+import * as THREE from 'three';
 import "./App.css";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-// Custom cursor component
+// 3D Background Scene Component
+const AnimatedSphere = ({ position, scale, color }) => {
+  const meshRef = useRef();
+  
+  useFrame((state) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.x = state.clock.elapsedTime * 0.2;
+      meshRef.current.rotation.y = state.clock.elapsedTime * 0.3;
+    }
+  });
+
+  return (
+    <Float speed={1.5} rotationIntensity={1} floatIntensity={2}>
+      <Sphere ref={meshRef} args={[1, 64, 64]} position={position} scale={scale}>
+        <MeshDistortMaterial
+          color={color}
+          attach="material"
+          distort={0.4}
+          speed={2}
+          roughness={0.1}
+          transparent
+          opacity={0.8}
+        />
+      </Sphere>
+    </Float>
+  );
+};
+
+const ParticleField = () => {
+  const pointsRef = useRef();
+  const particleCount = 300;
+  
+  const positions = new Float32Array(particleCount * 3);
+  for (let i = 0; i < particleCount; i++) {
+    positions[i * 3] = (Math.random() - 0.5) * 20;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+  }
+
+  useFrame((state) => {
+    if (pointsRef.current) {
+      pointsRef.current.rotation.x = state.clock.elapsedTime * 0.05;
+      pointsRef.current.rotation.y = state.clock.elapsedTime * 0.03;
+    }
+  });
+
+  return (
+    <points ref={pointsRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={particleCount}
+          array={positions}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.02}
+        color="#007AFF"
+        transparent
+        opacity={0.6}
+        sizeAttenuation
+      />
+    </points>
+  );
+};
+
+const Scene3D = () => {
+  return (
+    <div className="three-container">
+      <Canvas camera={{ position: [0, 0, 5], fov: 60 }}>
+        <Suspense fallback={null}>
+          <ambientLight intensity={0.5} />
+          <pointLight position={[10, 10, 10]} intensity={1} />
+          <pointLight position={[-10, -10, -10]} intensity={0.5} color="#5856D6" />
+          
+          <AnimatedSphere position={[-3, 2, -2]} scale={0.8} color="#007AFF" />
+          <AnimatedSphere position={[3, -1, -3]} scale={1.2} color="#5856D6" />
+          <AnimatedSphere position={[0, 3, -4]} scale={0.6} color="#34C759" />
+          
+          <ParticleField />
+          
+          <OrbitControls
+            enablePan={false}
+            enableZoom={false}
+            enableRotate={true}
+            autoRotate
+            autoRotateSpeed={0.5}
+          />
+        </Suspense>
+      </Canvas>
+    </div>
+  );
+};
+
+// Enhanced custom cursor component
 const CustomCursor = () => {
   const cursorRef = useRef(null);
   const cursorDotRef = useRef(null);
+  const cursorPos = useRef({ x: 0, y: 0 });
+  const cursorDotPos = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const cursor = cursorRef.current;
     const cursorDot = cursorDotRef.current;
 
     const moveCursor = (e) => {
-      cursor.style.left = e.clientX + 'px';
-      cursor.style.top = e.clientY + 'px';
-      cursorDot.style.left = e.clientX + 'px';
-      cursorDot.style.top = e.clientY + 'px';
+      cursorPos.current = { x: e.clientX, y: e.clientY };
+    };
+
+    const animateCursor = () => {
+      if (cursor && cursorDot) {
+        // Smooth cursor following with different speeds
+        cursorDotPos.current.x += (cursorPos.current.x - cursorDotPos.current.x) * 0.25;
+        cursorDotPos.current.y += (cursorPos.current.y - cursorDotPos.current.y) * 0.25;
+
+        cursor.style.left = (cursorPos.current.x - 20) + 'px';
+        cursor.style.top = (cursorPos.current.y - 20) + 'px';
+        
+        cursorDot.style.left = (cursorDotPos.current.x - 2) + 'px';
+        cursorDot.style.top = (cursorDotPos.current.y - 2) + 'px';
+      }
+      
+      requestAnimationFrame(animateCursor);
     };
 
     const handleMouseEnter = () => {
@@ -29,7 +142,17 @@ const CustomCursor = () => {
       cursor.classList.remove('cursor-hover');
     };
 
+    const handleMouseDown = () => {
+      cursor.classList.add('cursor-click');
+    };
+
+    const handleMouseUp = () => {
+      cursor.classList.remove('cursor-click');
+    };
+
     document.addEventListener('mousemove', moveCursor);
+    document.addEventListener('mousedown', handleMouseDown);
+    document.addEventListener('mouseup', handleMouseUp);
 
     // Add hover effects to interactive elements
     const interactiveElements = document.querySelectorAll('button, a, input, textarea, .interactive');
@@ -38,8 +161,12 @@ const CustomCursor = () => {
       el.addEventListener('mouseleave', handleMouseLeave);
     });
 
+    animateCursor();
+
     return () => {
       document.removeEventListener('mousemove', moveCursor);
+      document.removeEventListener('mousedown', handleMouseDown);
+      document.removeEventListener('mouseup', handleMouseUp);
       interactiveElements.forEach(el => {
         el.removeEventListener('mouseenter', handleMouseEnter);
         el.removeEventListener('mouseleave', handleMouseLeave);
@@ -78,48 +205,55 @@ const useScrollReveal = () => {
   }, []);
 };
 
-// Parallax hook
-const useParallax = () => {
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrolled = window.pageYOffset;
-      const parallaxElements = document.querySelectorAll('.parallax');
-      
-      parallaxElements.forEach(element => {
-        const speed = element.dataset.speed || 0.5;
-        const yPos = -(scrolled * speed);
-        element.style.transform = `translateY(${yPos}px)`;
-      });
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-};
-
-// Magnetic button effect
+// Enhanced magnetic button effect
 const MagneticButton = ({ children, className, ...props }) => {
   const buttonRef = useRef(null);
+  const magneticRef = useRef({ x: 0, y: 0 });
 
-  const handleMouseMove = (e) => {
+  useEffect(() => {
     const button = buttonRef.current;
-    const rect = button.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    
-    button.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
-  };
+    let animationId;
 
-  const handleMouseLeave = () => {
-    buttonRef.current.style.transform = 'translate(0px, 0px)';
-  };
+    const handleMouseMove = (e) => {
+      const rect = button.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      
+      magneticRef.current = { x: x * 0.3, y: y * 0.3 };
+    };
+
+    const handleMouseLeave = () => {
+      magneticRef.current = { x: 0, y: 0 };
+    };
+
+    const animate = () => {
+      if (button) {
+        button.style.transform = `translate(${magneticRef.current.x}px, ${magneticRef.current.y}px)`;
+      }
+      animationId = requestAnimationFrame(animate);
+    };
+
+    if (button) {
+      button.addEventListener('mousemove', handleMouseMove);
+      button.addEventListener('mouseleave', handleMouseLeave);
+      animate();
+    }
+
+    return () => {
+      if (button) {
+        button.removeEventListener('mousemove', handleMouseMove);
+        button.removeEventListener('mouseleave', handleMouseLeave);
+      }
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+    };
+  }, []);
 
   return (
     <button
       ref={buttonRef}
       className={`magnetic-button ${className}`}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       {...props}
     >
       {children}
@@ -240,28 +374,13 @@ const ContactForm = () => {
   );
 };
 
-// Floating elements component
-const FloatingElements = () => {
-  return (
-    <div className="floating-elements">
-      <div className="floating-orb orb-1"></div>
-      <div className="floating-orb orb-2"></div>
-      <div className="floating-orb orb-3"></div>
-      <div className="floating-particle particle-1"></div>
-      <div className="floating-particle particle-2"></div>
-      <div className="floating-particle particle-3"></div>
-    </div>
-  );
-};
-
 function App() {
   useScrollReveal();
-  useParallax();
 
   return (
     <div className="app-container">
       <CustomCursor />
-      <FloatingElements />
+      <Scene3D />
       
       {/* Enhanced Navigation */}
       <nav className="glass-nav">
@@ -279,11 +398,12 @@ function App() {
         </div>
       </nav>
 
-      {/* Hero Section with Parallax */}
+      {/* Hero Section */}
       <section id="home" className="hero-section">
+        <div className="glass-background"></div>
         <div className="hero-container">
           <div className="hero-content reveal">
-            <div className="hero-badge">
+            <div className="hero-badge glass-element">
               <span className="availability-dot"></span>
               Available for new projects
             </div>
@@ -300,16 +420,18 @@ function App() {
             
             <div className="hero-actions">
               <MagneticButton className="primary-button interactive">
-                View My Work
+                <span>View My Work</span>
+                <div className="button-shine"></div>
               </MagneticButton>
               <MagneticButton className="secondary-button interactive">
-                Get In Touch
+                <span>Get In Touch</span>
+                <div className="button-shine"></div>
               </MagneticButton>
             </div>
           </div>
           
-          <div className="hero-visual parallax" data-speed="0.3">
-            <div className="hero-image-container">
+          <div className="hero-visual">
+            <div className="hero-image-container glass-element">
               <img 
                 src="https://images.unsplash.com/photo-1607895232440-6ba075948c14"
                 alt="AI Technology"
@@ -327,6 +449,7 @@ function App() {
 
       {/* Expertise Section */}
       <section id="expertise" className="expertise-section">
+        <div className="glass-background"></div>
         <div className="section-container">
           <div className="section-header reveal">
             <h2 className="section-title">My Expertise</h2>
@@ -368,7 +491,7 @@ function App() {
                 description: "Identifying and implementing strategic AI applications that deliver measurable business value."
               }
             ].map((skill, index) => (
-              <div key={index} className="expertise-card reveal interactive" style={{animationDelay: `${index * 0.1}s`}}>
+              <div key={index} className="expertise-card glass-element reveal interactive" style={{animationDelay: `${index * 0.1}s`}}>
                 <div className="card-icon">{skill.icon}</div>
                 <h3 className="card-title">{skill.title}</h3>
                 <p className="card-description">{skill.description}</p>
@@ -380,6 +503,7 @@ function App() {
 
       {/* Services Section */}
       <section id="services" className="services-section">
+        <div className="glass-background"></div>
         <div className="section-container">
           <div className="section-header reveal">
             <h2 className="section-title">Services I Offer</h2>
@@ -390,14 +514,16 @@ function App() {
           
           <div className="services-content">
             <div className="service-item reveal">
-              <div className="service-visual parallax" data-speed="0.2">
-                <img 
-                  src="https://images.unsplash.com/photo-1573164574230-db1d5e960238"
-                  alt="AI Consulting"
-                  className="service-image"
-                />
+              <div className="service-visual">
+                <div className="service-image-container glass-element">
+                  <img 
+                    src="https://images.unsplash.com/photo-1573164574230-db1d5e960238"
+                    alt="AI Consulting"
+                    className="service-image"
+                  />
+                </div>
               </div>
-              <div className="service-content">
+              <div className="service-content glass-element">
                 <h3 className="service-title">AI Strategy & Consulting</h3>
                 <p className="service-description">
                   I help businesses identify the most impactful AI opportunities and develop comprehensive strategies for implementation. From initial assessment to full deployment, I guide you through every step of your AI transformation journey.
@@ -420,7 +546,7 @@ function App() {
             </div>
             
             <div className="service-item reveal">
-              <div className="service-content">
+              <div className="service-content glass-element">
                 <h3 className="service-title">Content Creation & Automation</h3>
                 <p className="service-description">
                   Leverage the power of generative AI to transform your content creation process. I specialize in building automated systems that produce high-quality images, videos, and written content at scale.
@@ -440,12 +566,14 @@ function App() {
                   </div>
                 </div>
               </div>
-              <div className="service-visual parallax" data-speed="0.2">
-                <img 
-                  src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
-                  alt="Content Creation"
-                  className="service-image"
-                />
+              <div className="service-visual">
+                <div className="service-image-container glass-element">
+                  <img 
+                    src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
+                    alt="Content Creation"
+                    className="service-image"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -454,6 +582,7 @@ function App() {
 
       {/* Testimonials Section */}
       <section id="testimonials" className="testimonials-section">
+        <div className="glass-background"></div>
         <div className="section-container">
           <div className="section-header reveal">
             <h2 className="section-title">What Clients Say</h2>
@@ -483,7 +612,7 @@ function App() {
                 content: "Working with Taichi was a game-changer. His AI coaching helped our team understand and leverage AI tools effectively. Highly recommended!"
               }
             ].map((testimonial, index) => (
-              <div key={index} className="testimonial-card reveal interactive" style={{animationDelay: `${index * 0.2}s`}}>
+              <div key={index} className="testimonial-card glass-element reveal interactive" style={{animationDelay: `${index * 0.2}s`}}>
                 <div className="testimonial-stars">
                   {[...Array(5)].map((_, i) => (
                     <span key={i} className="star">★</span>
@@ -491,7 +620,7 @@ function App() {
                 </div>
                 <p className="testimonial-content">"{testimonial.content}"</p>
                 <div className="testimonial-author">
-                  <div className="author-avatar">{testimonial.avatar}</div>
+                  <div className="author-avatar glass-element">{testimonial.avatar}</div>
                   <div className="author-info">
                     <h4 className="author-name">{testimonial.name}</h4>
                     <p className="author-role">{testimonial.role}</p>
@@ -505,6 +634,7 @@ function App() {
 
       {/* Contact Section */}
       <section id="contact" className="contact-section">
+        <div className="glass-background"></div>
         <div className="section-container">
           <div className="section-header reveal">
             <h2 className="section-title">Let's Work Together</h2>
@@ -515,7 +645,7 @@ function App() {
           
           <div className="contact-content">
             <div className="contact-info reveal">
-              <div className="contact-item">
+              <div className="contact-item glass-element">
                 <div className="contact-icon">
                   <span>✉️</span>
                 </div>
@@ -525,7 +655,7 @@ function App() {
                 </div>
               </div>
               
-              <div className="contact-item">
+              <div className="contact-item glass-element">
                 <div className="contact-icon">
                   <span>🌍</span>
                 </div>
@@ -535,7 +665,7 @@ function App() {
                 </div>
               </div>
               
-              <div className="contact-item">
+              <div className="contact-item glass-element">
                 <div className="contact-icon">
                   <span>⚡</span>
                 </div>
@@ -546,15 +676,17 @@ function App() {
               </div>
               
               <div className="contact-visual">
-                <img 
-                  src="https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b"
-                  alt="AI Technology"
-                  className="contact-image"
-                />
+                <div className="contact-image-container glass-element">
+                  <img 
+                    src="https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b"
+                    alt="AI Technology"
+                    className="contact-image"
+                  />
+                </div>
               </div>
             </div>
             
-            <div className="contact-form-container reveal">
+            <div className="contact-form-container glass-element reveal">
               <div className="form-wrapper">
                 <h3 className="form-title">Send a Message</h3>
                 <ContactForm />
@@ -566,8 +698,9 @@ function App() {
 
       {/* Footer */}
       <footer className="footer">
+        <div className="glass-background"></div>
         <div className="footer-container">
-          <div className="footer-content">
+          <div className="footer-content glass-element">
             <div className="footer-logo">Taichi</div>
             <p className="footer-description">
               AI Creator & AI Consultant - Transforming businesses through intelligent automation
