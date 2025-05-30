@@ -297,7 +297,7 @@ const ContactForm = () => {
     <form onSubmit={handleSubmit} className="space-y-8">
       <div className="form-group">
         <label htmlFor="name" className="form-label">
-          Name
+          お名前
         </label>
         <input
           type="text"
@@ -307,13 +307,13 @@ const ContactForm = () => {
           onChange={handleChange}
           required
           className="form-input interactive"
-          placeholder="Your name"
+          placeholder="お名前をご入力ください"
         />
       </div>
       
       <div className="form-group">
         <label htmlFor="email" className="form-label">
-          Email
+          メールアドレス
         </label>
         <input
           type="email"
@@ -329,7 +329,7 @@ const ContactForm = () => {
       
       <div className="form-group">
         <label htmlFor="message" className="form-label">
-          Message
+          メッセージ
         </label>
         <textarea
           id="message"
@@ -339,7 +339,7 @@ const ContactForm = () => {
           required
           rows={6}
           className="form-input interactive"
-          placeholder="Tell me about your project or how I can help you..."
+          placeholder="プロジェクトについて、またはお手伝いできることについてお聞かせください..."
         />
       </div>
       
@@ -351,23 +351,23 @@ const ContactForm = () => {
         {isSubmitting ? (
           <span className="flex items-center justify-center">
             <div className="loading-spinner"></div>
-            Sending...
+            送信中...
           </span>
         ) : (
-          'Send Message'
+          'メッセージを送信'
         )}
       </MagneticButton>
       
       {submitStatus === 'success' && (
         <div className="success-message animate-reveal">
           <div className="checkmark"></div>
-          Thank you! Your message has been sent successfully.
+          ありがとうございます！メッセージが正常に送信されました。
         </div>
       )}
       
       {submitStatus === 'error' && (
         <div className="error-message animate-reveal">
-          Sorry, there was an error. Please try again.
+          申し訳ございません。エラーが発生しました。もう一度お試しください。
         </div>
       )}
     </form>
@@ -389,11 +389,11 @@ function App() {
             <span className="logo-text">Taichi</span>
           </div>
           <div className="nav-links">
-            <a href="#home" className="nav-link interactive">Home</a>
-            <a href="#expertise" className="nav-link interactive">Expertise</a>
-            <a href="#services" className="nav-link interactive">Services</a>
-            <a href="#testimonials" className="nav-link interactive">Reviews</a>
-            <a href="#contact" className="nav-link interactive">Contact</a>
+            <a href="#home" className="nav-link interactive">ホーム</a>
+            <a href="#expertise" className="nav-link interactive">専門分野</a>
+            <a href="#services" className="nav-link interactive">サービス</a>
+            <a href="#testimonials" className="nav-link interactive">お客様の声</a>
+            <a href="#contact" className="nav-link interactive">お問い合わせ</a>
           </div>
         </div>
       </nav>
@@ -405,26 +405,27 @@ function App() {
           <div className="hero-content reveal">
             <div className="hero-badge glass-element">
               <span className="availability-dot"></span>
-              Available for new projects
+              新しいプロジェクトを受付中
             </div>
             <h1 className="hero-title">
-              <span className="hero-greeting">Hi, I'm</span>
+              <span className="hero-greeting">こんにちは、私は</span>
               <span className="hero-name">Taichi</span>
+              <span className="hero-greeting-suffix">です</span>
             </h1>
             <div className="hero-subtitle">
-              <p className="role-title">AI Creator & AI Consultant</p>
+              <p className="role-title">AIクリエイター・AIコンサルタント</p>
               <p className="role-description">
-                Transforming businesses through intelligent automation and cutting-edge AI solutions
+                インテリジェントオートメーションと最先端のAIソリューションで企業の変革をお手伝いします
               </p>
             </div>
             
             <div className="hero-actions">
               <MagneticButton className="primary-button interactive">
-                <span>View My Work</span>
+                <span>作品を見る</span>
                 <div className="button-shine"></div>
               </MagneticButton>
               <MagneticButton className="secondary-button interactive">
-                <span>Get In Touch</span>
+                <span>お問い合わせ</span>
                 <div className="button-shine"></div>
               </MagneticButton>
             </div>
@@ -452,9 +453,9 @@ function App() {
         <div className="glass-background"></div>
         <div className="section-container">
           <div className="section-header reveal">
-            <h2 className="section-title">My Expertise</h2>
+            <h2 className="section-title">私の専門分野</h2>
             <p className="section-subtitle">
-              Specialized in creating intelligent solutions that drive business growth and innovation
+              ビジネスの成長とイノベーションを推進するインテリジェントソリューションの創出を専門としています
             </p>
           </div>
           
@@ -462,33 +463,33 @@ function App() {
             {[
               {
                 icon: "🧠",
-                title: "Generative AI",
-                description: "Expertise in developing cutting-edge generative AI solutions for content creation, automation, and innovation."
+                title: "生成AI",
+                description: "コンテンツ制作、自動化、イノベーションのための最先端の生成AIソリューション開発における専門知識。"
               },
               {
                 icon: "👨‍🏫",
-                title: "AI Coaching",
-                description: "Guiding teams and individuals to successfully integrate AI technologies into their workflows and business processes."
+                title: "AIコーチング",
+                description: "チームや個人がAI技術をワークフローやビジネスプロセスに効果的に統合できるよう指導いたします。"
               },
               {
                 icon: "⚡",
-                title: "Workflow Optimization",
-                description: "Streamlining business processes through AI-powered automation and intelligent workflow design."
+                title: "ワークフロー最適化",
+                description: "AI駆動の自動化とインテリジェントなワークフロー設計により、ビジネスプロセスを合理化します。"
               },
               {
                 icon: "🎨",
-                title: "AI Image Creation",
-                description: "Creating stunning visual content using advanced AI image generation tools and techniques."
+                title: "AI画像生成",
+                description: "高度なAI画像生成ツールと技術を使用して、素晴らしいビジュアルコンテンツを制作します。"
               },
               {
                 icon: "🎬",
-                title: "AI Video Production",
-                description: "Producing engaging video content through AI-powered tools and automated video generation systems."
+                title: "AI動画制作",
+                description: "AI駆動ツールと自動動画生成システムを通じて、魅力的な動画コンテンツを制作します。"
               },
               {
                 icon: "💡",
-                title: "AI Use Cases",
-                description: "Identifying and implementing strategic AI applications that deliver measurable business value."
+                title: "AIユースケース",
+                description: "測定可能なビジネス価値を提供する戦略的なAIアプリケーションの特定と実装を行います。"
               }
             ].map((skill, index) => (
               <div key={index} className="expertise-card glass-element reveal interactive" style={{animationDelay: `${index * 0.1}s`}}>
@@ -506,9 +507,9 @@ function App() {
         <div className="glass-background"></div>
         <div className="section-container">
           <div className="section-header reveal">
-            <h2 className="section-title">Services I Offer</h2>
+            <h2 className="section-title">提供サービス</h2>
             <p className="section-subtitle">
-              Comprehensive AI solutions tailored to your business needs
+              お客様のビジネスニーズに合わせたAIソリューションを包括的に提供いたします
             </p>
           </div>
           
@@ -524,22 +525,22 @@ function App() {
                 </div>
               </div>
               <div className="service-content glass-element">
-                <h3 className="service-title">AI Strategy & Consulting</h3>
+                <h3 className="service-title">AI戦略・コンサルティング</h3>
                 <p className="service-description">
-                  I help businesses identify the most impactful AI opportunities and develop comprehensive strategies for implementation. From initial assessment to full deployment, I guide you through every step of your AI transformation journey.
+                  最も影響力のあるAI機会を特定し、実装のための包括的な戦略を策定するお手伝いをいたします。初期評価から完全展開まで、AIトランスフォーメーションの全過程をガイドします。
                 </p>
                 <div className="service-features">
                   <div className="feature-item">
                     <span className="feature-check">✓</span>
-                    AI Readiness Assessment
+                    AI準備状況評価
                   </div>
                   <div className="feature-item">
                     <span className="feature-check">✓</span>
-                    Custom AI Solution Design
+                    カスタムAIソリューション設計
                   </div>
                   <div className="feature-item">
                     <span className="feature-check">✓</span>
-                    Implementation Roadmap
+                    実装ロードマップ
                   </div>
                 </div>
               </div>
@@ -547,22 +548,22 @@ function App() {
             
             <div className="service-item reveal">
               <div className="service-content glass-element">
-                <h3 className="service-title">Content Creation & Automation</h3>
+                <h3 className="service-title">コンテンツ制作・自動化</h3>
                 <p className="service-description">
-                  Leverage the power of generative AI to transform your content creation process. I specialize in building automated systems that produce high-quality images, videos, and written content at scale.
+                  生成AIの力を活用してコンテンツ制作プロセスを変革します。高品質な画像、動画、文章コンテンツを大規模に生産する自動化システムの構築を専門としています。
                 </p>
                 <div className="service-features">
                   <div className="feature-item">
                     <span className="feature-check">✓</span>
-                    AI-Powered Image Generation
+                    AI駆動画像生成
                   </div>
                   <div className="feature-item">
                     <span className="feature-check">✓</span>
-                    Automated Video Production
+                    自動動画制作
                   </div>
                   <div className="feature-item">
                     <span className="feature-check">✓</span>
-                    Content Workflow Optimization
+                    コンテンツワークフロー最適化
                   </div>
                 </div>
               </div>
@@ -585,9 +586,9 @@ function App() {
         <div className="glass-background"></div>
         <div className="section-container">
           <div className="section-header reveal">
-            <h2 className="section-title">What Clients Say</h2>
+            <h2 className="section-title">お客様の声</h2>
             <p className="section-subtitle">
-              Hear from businesses that have transformed their operations with AI
+              AIで事業運営を変革された企業様からのお声をお聞きください
             </p>
           </div>
           
@@ -595,21 +596,21 @@ function App() {
             {[
               {
                 name: "Sarah Mitchell",
-                role: "Marketing Director, TechCorp",
+                role: "マーケティングディレクター, TechCorp",
                 avatar: "SM",
-                content: "Taichi helped us implement an AI-powered content creation system that increased our productivity by 300%. His expertise in generative AI is truly remarkable."
+                content: "Taichiさんのおかげで、AI駆動のコンテンツ制作システムを導入し、生産性が300%向上しました。生成AIに関する彼の専門知識は本当に素晴らしいです。"
               },
               {
                 name: "Michael Johnson",
                 role: "CEO, InnovateLab",
                 avatar: "MJ",
-                content: "The AI workflow optimization Taichi designed for us saved over 20 hours per week. His strategic approach to AI implementation is exceptional."
+                content: "Taichiさんが設計したAIワークフロー最適化により、週20時間以上の時間を節約できました。AI実装への彼の戦略的アプローチは卓越しています。"
               },
               {
                 name: "Emily Chen",
                 role: "CTO, DataFlow Solutions",
                 avatar: "EC",
-                content: "Working with Taichi was a game-changer. His AI coaching helped our team understand and leverage AI tools effectively. Highly recommended!"
+                content: "Taichiさんとの協働はゲームチェンジャーでした。彼のAIコーチングにより、チームがAIツールを効果的に理解し活用できるようになりました。強くお勧めします！"
               }
             ].map((testimonial, index) => (
               <div key={index} className="testimonial-card glass-element reveal interactive" style={{animationDelay: `${index * 0.2}s`}}>
@@ -637,9 +638,9 @@ function App() {
         <div className="glass-background"></div>
         <div className="section-container">
           <div className="section-header reveal">
-            <h2 className="section-title">Let's Work Together</h2>
+            <h2 className="section-title">一緒に働きませんか</h2>
             <p className="section-subtitle">
-              Ready to transform your business with AI? Let's discuss how I can help you achieve your goals.
+              AIでビジネスを変革する準備はできていますか？目標達成のお手伝いについてお話しましょう。
             </p>
           </div>
           
@@ -650,7 +651,7 @@ function App() {
                   <span>✉️</span>
                 </div>
                 <div className="contact-details">
-                  <h4>Email</h4>
+                  <h4>メール</h4>
                   <p>taichi@example.com</p>
                 </div>
               </div>
@@ -660,8 +661,8 @@ function App() {
                   <span>🌍</span>
                 </div>
                 <div className="contact-details">
-                  <h4>Location</h4>
-                  <p>Available globally (Remote)</p>
+                  <h4>所在地</h4>
+                  <p>世界中どこでも対応（リモート）</p>
                 </div>
               </div>
               
@@ -670,8 +671,8 @@ function App() {
                   <span>⚡</span>
                 </div>
                 <div className="contact-details">
-                  <h4>Response Time</h4>
-                  <p>Within 24 hours</p>
+                  <h4>返信時間</h4>
+                  <p>24時間以内</p>
                 </div>
               </div>
               
@@ -688,7 +689,7 @@ function App() {
             
             <div className="contact-form-container glass-element reveal">
               <div className="form-wrapper">
-                <h3 className="form-title">Send a Message</h3>
+                <h3 className="form-title">メッセージを送信</h3>
                 <ContactForm />
               </div>
             </div>
@@ -703,7 +704,7 @@ function App() {
           <div className="footer-content glass-element">
             <div className="footer-logo">Taichi</div>
             <p className="footer-description">
-              AI Creator & AI Consultant - Transforming businesses through intelligent automation
+              AIクリエイター・AIコンサルタント - インテリジェントオートメーションで企業を変革
             </p>
             <div className="footer-bottom">
               <p>© 2025 Taichi. All rights reserved.</p>

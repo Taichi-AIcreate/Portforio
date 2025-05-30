@@ -1,5 +1,6 @@
-/* Import fonts for premium typography */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+/* Import Japanese and English fonts */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
@@ -40,11 +41,28 @@ html {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Noto Sans JP', 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   background: var(--background);
   color: var(--text-primary);
   overflow-x: hidden;
   cursor: none;
+  line-height: 1.7;
+  font-feature-settings: "palt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Japanese Typography */
+.japanese-text {
+  font-family: 'Noto Sans JP', sans-serif;
+  letter-spacing: 0.02em;
+  line-height: 1.8;
+}
+
+/* English Typography */
+.english-text {
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.01em;
   line-height: 1.6;
 }
 
@@ -143,6 +161,7 @@ body {
 }
 
 .logo-text {
+  font-family: 'Outfit', sans-serif;
   font-size: 18px;
   font-weight: 700;
   background: var(--gradient-primary);
@@ -157,6 +176,7 @@ body {
 }
 
 .nav-link {
+  font-family: 'Noto Sans JP', sans-serif;
   color: var(--text-primary);
   text-decoration: none;
   font-weight: 500;
@@ -166,6 +186,7 @@ body {
   transition: var(--transition);
   position: relative;
   overflow: hidden;
+  letter-spacing: 0.02em;
 }
 
 .nav-link::before {
@@ -232,6 +253,7 @@ body {
 }
 
 .hero-badge {
+  font-family: 'Noto Sans JP', sans-serif;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -240,6 +262,7 @@ body {
   font-weight: 500;
   color: var(--text-secondary);
   margin-bottom: 32px;
+  letter-spacing: 0.02em;
 }
 
 .availability-dot {
@@ -253,6 +276,7 @@ body {
 
 .hero-title {
   margin-bottom: 24px;
+  font-family: 'Noto Sans JP', sans-serif;
 }
 
 .hero-greeting {
@@ -261,10 +285,21 @@ body {
   font-weight: 400;
   color: var(--text-secondary);
   margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+
+.hero-greeting-suffix {
+  display: block;
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  letter-spacing: 0.02em;
 }
 
 .hero-name {
   display: block;
+  font-family: 'Outfit', sans-serif;
   font-size: 72px;
   font-weight: 800;
   background: var(--gradient-primary);
@@ -273,10 +308,12 @@ body {
   background-clip: text;
   line-height: 1.1;
   text-shadow: 0 0 30px rgba(0, 122, 255, 0.3);
+  margin: 8px 0;
 }
 
 .hero-subtitle {
   margin-bottom: 48px;
+  font-family: 'Noto Sans JP', sans-serif;
 }
 
 .role-title {
@@ -284,13 +321,15 @@ body {
   font-weight: 600;
   margin-bottom: 12px;
   color: var(--text-primary);
+  letter-spacing: 0.02em;
 }
 
 .role-description {
   font-size: 18px;
   color: var(--text-secondary);
-  line-height: 1.6;
+  line-height: 1.8;
   max-width: 480px;
+  letter-spacing: 0.02em;
 }
 
 .hero-actions {
@@ -337,6 +376,7 @@ body {
 
 /* Enhanced Buttons */
 .primary-button {
+  font-family: 'Noto Sans JP', sans-serif;
   background: var(--gradient-primary);
   color: white;
   border: none;
@@ -349,6 +389,7 @@ body {
   position: relative;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0, 122, 255, 0.3);
+  letter-spacing: 0.02em;
 }
 
 .primary-button:hover {
@@ -357,6 +398,7 @@ body {
 }
 
 .secondary-button {
+  font-family: 'Noto Sans JP', sans-serif;
   background: var(--glass);
   color: var(--text-primary);
   border: 1px solid var(--glass-border);
@@ -369,6 +411,7 @@ body {
   cursor: none;
   position: relative;
   overflow: hidden;
+  letter-spacing: 0.02em;
 }
 
 .secondary-button:hover {
@@ -432,6 +475,7 @@ body {
 }
 
 .section-title {
+  font-family: 'Noto Sans JP', sans-serif;
   font-size: 48px;
   font-weight: 700;
   margin-bottom: 16px;
@@ -440,14 +484,17 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-shadow: 0 0 30px rgba(0, 122, 255, 0.3);
+  letter-spacing: 0.02em;
 }
 
 .section-subtitle {
+  font-family: 'Noto Sans JP', sans-serif;
   font-size: 20px;
   color: var(--text-secondary);
   max-width: 600px;
   margin: 0 auto;
-  line-height: 1.6;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
 }
 
 /* Expertise Section */
@@ -500,19 +547,23 @@ body {
 }
 
 .card-title {
+  font-family: 'Noto Sans JP', sans-serif;
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 16px;
   color: var(--text-primary);
   position: relative;
   z-index: 2;
+  letter-spacing: 0.02em;
 }
 
 .card-description {
+  font-family: 'Noto Sans JP', sans-serif;
   color: var(--text-secondary);
-  line-height: 1.6;
+  line-height: 1.8;
   position: relative;
   z-index: 2;
+  letter-spacing: 0.02em;
 }
 
 /* Services Section */
@@ -570,17 +621,21 @@ body {
 }
 
 .service-title {
+  font-family: 'Noto Sans JP', sans-serif;
   font-size: 32px;
   font-weight: 700;
   margin-bottom: 24px;
   color: var(--text-primary);
+  letter-spacing: 0.02em;
 }
 
 .service-description {
+  font-family: 'Noto Sans JP', sans-serif;
   font-size: 18px;
   color: var(--text-secondary);
-  line-height: 1.6;
+  line-height: 1.8;
   margin-bottom: 32px;
+  letter-spacing: 0.02em;
 }
 
 .service-features {
@@ -590,11 +645,13 @@ body {
 }
 
 .feature-item {
+  font-family: 'Noto Sans JP', sans-serif;
   display: flex;
   align-items: center;
   gap: 12px;
   font-weight: 500;
   color: var(--text-primary);
+  letter-spacing: 0.02em;
 }
 
 .feature-check {
@@ -666,12 +723,14 @@ body {
 }
 
 .testimonial-content {
+  font-family: 'Noto Sans JP', sans-serif;
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.8;
   margin-bottom: 24px;
   color: var(--text-secondary);
   position: relative;
   z-index: 2;
+  letter-spacing: 0.02em;
 }
 
 .testimonial-author {
@@ -696,6 +755,7 @@ body {
 }
 
 .author-name {
+  font-family: 'Outfit', sans-serif;
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 4px;
@@ -703,8 +763,10 @@ body {
 }
 
 .author-role {
+  font-family: 'Noto Sans JP', sans-serif;
   font-size: 14px;
   color: var(--text-secondary);
+  letter-spacing: 0.02em;
 }
 
 /* Contact Section */
@@ -745,14 +807,18 @@ body {
 }
 
 .contact-details h4 {
+  font-family: 'Noto Sans JP', sans-serif;
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 4px;
   color: var(--text-primary);
+  letter-spacing: 0.02em;
 }
 
 .contact-details p {
+  font-family: 'Noto Sans JP', sans-serif;
   color: var(--text-secondary);
+  letter-spacing: 0.02em;
 }
 
 .contact-visual {
@@ -778,10 +844,12 @@ body {
 }
 
 .form-title {
+  font-family: 'Noto Sans JP', sans-serif;
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 32px;
   color: var(--text-primary);
+  letter-spacing: 0.02em;
 }
 
 .form-group {
@@ -789,14 +857,17 @@ body {
 }
 
 .form-label {
+  font-family: 'Noto Sans JP', sans-serif;
   display: block;
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 8px;
   color: var(--text-primary);
+  letter-spacing: 0.02em;
 }
 
 .form-input {
+  font-family: 'Noto Sans JP', sans-serif;
   width: 100%;
   padding: 16px 20px;
   border: 1px solid var(--glass-border);
@@ -807,6 +878,7 @@ body {
   font-size: 16px;
   transition: var(--transition);
   resize: none;
+  letter-spacing: 0.02em;
 }
 
 .form-input:focus {
@@ -833,6 +905,7 @@ body {
 
 /* Success/Error Messages */
 .success-message {
+  font-family: 'Noto Sans JP', sans-serif;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -843,9 +916,11 @@ body {
   border: 1px solid rgba(52, 199, 89, 0.2);
   border-radius: 12px;
   backdrop-filter: blur(20px);
+  letter-spacing: 0.02em;
 }
 
 .error-message {
+  font-family: 'Noto Sans JP', sans-serif;
   color: #FF3B30;
   font-weight: 500;
   padding: 16px;
@@ -853,6 +928,7 @@ body {
   border: 1px solid rgba(255, 59, 48, 0.2);
   border-radius: 12px;
   backdrop-filter: blur(20px);
+  letter-spacing: 0.02em;
 }
 
 .checkmark {
@@ -897,6 +973,7 @@ body {
 }
 
 .footer-logo {
+  font-family: 'Outfit', sans-serif;
   font-size: 32px;
   font-weight: 700;
   background: var(--gradient-primary);
@@ -908,9 +985,11 @@ body {
 }
 
 .footer-description {
+  font-family: 'Noto Sans JP', sans-serif;
   color: var(--text-secondary);
   margin-bottom: 40px;
   font-size: 16px;
+  letter-spacing: 0.02em;
 }
 
 .footer-bottom {
@@ -919,6 +998,7 @@ body {
 }
 
 .footer-bottom p {
+  font-family: 'Outfit', sans-serif;
   color: var(--text-tertiary);
   font-size: 14px;
 }
