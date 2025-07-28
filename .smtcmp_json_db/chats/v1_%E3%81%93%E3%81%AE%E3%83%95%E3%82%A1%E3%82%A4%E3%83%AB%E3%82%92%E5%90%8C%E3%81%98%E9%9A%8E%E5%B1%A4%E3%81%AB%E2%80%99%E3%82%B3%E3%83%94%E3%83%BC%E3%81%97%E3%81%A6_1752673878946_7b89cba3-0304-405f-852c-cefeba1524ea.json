@@ -1,0 +1,51 @@
+{
+  "id": "7b89cba3-0304-405f-852c-cefeba1524ea",
+  "title": "このファイルを同じ階層に’コピーして",
+  "messages": [
+    {
+      "role": "user",
+      "content": {
+        "root": {
+          "children": [
+            {
+              "children": [
+                {
+                  "detail": 0,
+                  "format": 0,
+                  "mode": "normal",
+                  "style": "",
+                  "text": "こんにちは！",
+                  "type": "text",
+                  "version": 1
+                }
+              ],
+              "direction": "ltr",
+              "format": "",
+              "indent": 0,
+              "type": "paragraph",
+              "version": 1,
+              "textFormat": 0,
+              "textStyle": ""
+            }
+          ],
+          "direction": "ltr",
+          "format": "",
+          "indent": 0,
+          "type": "root",
+          "version": 1
+        }
+      },
+      "promptContent": [
+        {
+          "type": "text",
+          "text": "\n\nこのファイルを同じ階層に’コピーして\n\n"
+        }
+      ],
+      "id": "c10fc063-482f-4ce5-bcba-649b90bf6b37",
+      "mentionables": []
+    }
+  ],
+  "createdAt": 1752640387136,
+  "updatedAt": 1752673878946,
+  "schemaVersion": 1
+}

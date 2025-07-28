@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">obsidian://open?vault=my%20note&file=Clippings%2FSmart%20Composer
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メタゲーム西中島月次報告</title>
+    <style>
+        /* === 文字視認性向上のための外線追加 === */
+        h1, h2, .section-title, .card h2, .card .value, .summary-item h3, .summary-item p, table th, table td, p, .footer {
+            color: #374151 !important;
+            text-shadow:
+                0 0 2px rgba(0,0,0,0.06),
+                0 1px 4px rgba(0,0,0,0.04);
+        }
+        /* === ここまで追加 === */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            /* コントラストを上げた鮮やかなグラデーションに調整 */
+            background: linear-gradient(135deg, #5a6eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+            background-size: 300% 300%;
+            animation: gradientBG 15s ease-in-out infinite;
+            display: block;
+            color: #333;
+            cursor: none;
+            min-height: 100vh;
+            overflow-y: auto;
+            padding: 0;
+            margin: 0;
+            position: relative;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 100% 25%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+            100% { background-position: 0% 50%; }
+        }
+        .floating-objects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .floating-object {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.15);
+            animation: float 20s infinite ease-in-out;
+            filter: blur(0.5px);
+        }
+        .floating-object:nth-child(1) { width: 120px; height: 120px; top: 10%; left: 8%; animation-delay: 0s; }
+        .floating-object:nth-child(2) { width: 180px; height: 180px; top: 65%; left: 18%; animation-delay: -4s; }
+        .floating-object:nth-child(3) { width: 90px; height: 90px; top: 25%; left: 55%; animation-delay: -8s; }
+        .floating-object:nth-child(4) { width: 140px; height: 140px; top: 75%; left: 75%; animation-delay: -12s; }
+        .floating-object:nth-child(5) { width: 200px; height: 200px; top: 50%; left: 80%; animation-delay: -16s; }
+        .floating-object:nth-child(6) { width: 70px; height: 70px; top: 80%; left: 40%; animation-delay: -20s; }
+        @keyframes float {
+            0% { transform: translateY(0) scale(1) rotate(0deg); }
+            25% { transform: translateY(-30px) scale(1.03) rotate(90deg); }
+            50% { transform: translateY(0) scale(1) rotate(180deg); }
+            75% { transform: translateY(30px) scale(0.97) rotate(270deg); }
+            100% { transform: translateY(0) scale(1) rotate(360deg); }
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.32);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 35px;
+            border-radius: 25px;
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+            width: 100%;
+            max-width: 1000px;
+            position: relative;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            box-sizing: border-box;
+            overflow-y: visible;
+            display: block;
+            text-align: left;
+            margin: 0;
+            margin-bottom: 40px;
+        }
+        h1 {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin: 0 0 40px 0;
+            font-size: 2.8em;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #fff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .section-title {
+            font-size: 1.6em;
+            margin: 40px 0 25px 0;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 0 0 40px 0;
+            width: 100%;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 6px 24px 0 rgba(31, 38, 135, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: visible;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 0;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 25px;
+            padding: 2px;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px) scale(1.01);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 12px 32px 0 rgba(31, 38, 135, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            z-index: 10;
+        }
+        .card:hover::before {
+            opacity: 1;
+        }
+        .card .value {
+            font-size: 2em;
+            margin: 12px 0;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+        }
+        .card .value.green {
+            color: #4ade80 !important;
+            text-shadow: 0 0 15px rgba(74, 222, 128, 0.25);
+        }
+        .card .value.red {
+            color: #f87171 !important;
+            text-shadow: 0 0 15px rgba(248, 113, 113, 0.25);
+        }
+        .card .value.blue {
+            color: #60a5fa !important;
+            text-shadow: 0 0 15px rgba(96, 165, 250, 0.25);
+        }
+        .card:hover .value {
+            transform: scale(1.05);
+        }
+        .card h2 {
+            font-size: 1.3em;
+            margin-top: 0;
+            color: rgba(255, 255, 255, 0.9);
+            transition: all 0.4s ease;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .card:hover h2 {
+            transform: translateY(-3px);
+            color: rgba(255, 255, 255, 1);
+        }
+        .card .popup-details {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(25px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 35px 0 rgba(31, 38, 135, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            width: 320px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+        .card:hover .popup-details {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(15px);
+        }
+        .popup-details h3 {
+            color: #1a1a1a;
+            margin: 0 0 20px 0;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        .popup-details p {
+            color: #333;
+            margin: 0 0 12px 0;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        .popup-details .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        .popup-details .detail-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .popup-details .detail-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .popup-details .detail-value {
+            color: #1a1a1a;
+            font-weight: 500;
+        }
+        .popup-details .trend {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-left: 10px;
+            font-weight: 500;
+        }
+        .popup-details .trend.positive {
+            background: rgba(74, 222, 128, 0.2);
+            color: #16a34a;
+        }
+        .popup-details .trend.negative {
+            background: rgba(248, 113, 113, 0.2);
+            color: #dc2626;
+        }
+        .popup-details .trend.neutral {
+            background: rgba(96, 165, 250, 0.2);
+            color: #2563eb;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 0 35px 0;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 6px 24px 0 rgba(31, 38, 135, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        th {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .progress-section {
+            margin: 0 0 40px 0;
+        }
+        .progress-item {
+            margin: 0 0 20px 0;
+        }
+        .progress-item label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+        .progress-bar-container {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 12px;
+            height: 28px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4ade80, #22c55e);
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-size: 0.9em;
+            line-height: 28px;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 1px 6px rgba(74, 222, 128, 0.25);
+            transition: all 0.3s ease;
+        }
+        .progress-bar.blue-bar {
+            background: linear-gradient(90deg, #60a5fa, #3b82f6);
+            box-shadow: 0 1px 6px rgba(96, 165, 250, 0.25);
+        }
+        .summary-section {
+            margin: 40px 0 0 0;
+        }
+        .summary-item {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 6px 24px 0 rgba(31, 38, 135, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            margin: 0 0 20px 0;
+            transition: all 0.3s ease;
+        }
+        .summary-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px 0 rgba(31, 38, 135, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        }
+        .summary-item h3 {
+            margin-top: 0;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.2em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .summary-item p {
+            margin: 0;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1.05em;
+        }
+        .footer {
+            text-align: right;
+            margin: 50px 0 0 0;
+            font-size: 0.95em;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+        p[style*="text-align: center"] {
+            margin: 0 0 40px 0;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+        .comparison-positive {
+            color: #16a34a !important;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(74, 222, 128, 0.18);
+        }
+        .comparison-negative {
+            color: #dc2626 !important;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(248, 113, 113, 0.18);
+        }
+        .comparison-neutral {
+            color: #2563eb !important;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(96, 165, 250, 0.18);
+        }
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+                border-radius: 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .grid-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .card {
+                padding: 20px;
+            }
+        }
+        #cursor {
+            pointer-events: none;
+            position: fixed;
+            display: block;
+            border-radius: 0;
+            transform-origin: center center;
+            mix-blend-mode: difference;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            filter: url("#goo");
+        }
+        #cursor span {
+            position: absolute;
+            display: block;
+            width: 26px;
+            height: 26px;
+            border-radius: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            transform-origin: center center;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
+</head>
+<body>
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800">
+        <defs>
+            <filter id="goo">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 35 -15" result="goo" />
+                <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+            </filter>
+        </defs>
+    </svg>
+    <div id="cursor"></div>
+    <div class="floating-objects">
+        <div class="floating-object"></div>
+        <div class="floating-object"></div>
+        <div class="floating-object"></div>
+        <div class="floating-object"></div>
+        <div class="floating-object"></div>
+        <div class="floating-object"></div>
+    </div>
+    <div class="container">
+        <h1>メタゲーム西中島月次報告</h1>
+        <div id="june-content">
+            <p style="text-align: center; color: #555;">2025年6月1日~6月30日</p>
+            <h2 class="section-title">6月度 運営状況</h2>
+            <div class="grid-container">
+                <div class="card">
+                    <h2>稼働率</h2>
+                    <div class="value green">76%</div>
+                    <div class="popup-details">
+                        <h3>稼働率の詳細</h3>
+                        <div class="detail-item">
+                            <span class="detail-label">利用数</span>
+                            <span class="detail-value">143日</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">目標</span>
+                            <span class="detail-value">189日</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">最大稼働率</span>
+                            <span class="detail-value">57% (143日/252日)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">前月比</span>
+                            <span class="detail-value">
+                                +4.5%
+                                <span class="trend positive">改善</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2>給付費</h2>
+                    <div class="value green">¥858,000</div>
+                    <div class="popup-details">
+                        <h3>給付費の詳細</h3>
+                        <div class="detail-item">
+                            <span class="detail-label">総売上</span>
+                            <span class="detail-value">¥858,000</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">前月比</span>
+                            <span class="detail-value">
+                                +¥12,000
+                                <span class="trend positive">+1.4%</span>
+                            </span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">前年同月比</span>
+                            <span class="detail-value">
+                                +¥168,000
+                                <span class="trend positive">+24.3%</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2>生産活動費</h2>
+                    <div class="value red">¥0</div>
+                    <div class="popup-details">
+                        <h3>生産活動費の詳細</h3>
+                        <div class="detail-item">
+                            <span class="detail-label">前月比</span>
+                            <span class="detail-value">
+                                ±¥0
+                                <span class="trend neutral">変動なし</span>
+                            </span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">備考</span>
+                            <span class="detail-value">6月も生産活動なし</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2>退所者数</h2>
+                    <div class="value blue">0人</div>
+                    <div class="popup-details">
+                        <h3>退所者数の詳細</h3>
+                        <div class="detail-item">
+                            <span class="detail-label">前月比</span>
+                            <span class="detail-value">
+                                0人
+                                <span class="trend neutral">変動なし</span>
+                            </span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">年間累計</span>
+                            <span class="detail-value">0人</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2>新規契約者</h2>
+                    <div class="value green">3名</div>
+                    <div class="popup-details">
+                        <h3>新規契約者の詳細</h3>
+                        <div class="detail-item">
+                            <span class="detail-label">契約率</span>
+                            <span class="detail-value">
+                                100%
+                                <span class="trend positive">回復</span>
+                            </span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">前月比</span>
+                            <span class="detail-value">
+                                +3名
+                                <span class="trend positive">大幅改善</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2>体験・見学人数</h2>
+                    <div class="value green">3名</div>
+                    <div class="popup-details">
+                        <h3>体験・見学の詳細</h3>
+                        <div class="detail-item">
+                            <span class="detail-label">見学実施率</span>
+                            <span class="detail-value">38% (3件/8件)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">前月比</span>
+                            <span class="detail-value">
+                                +1名
+                                <span class="trend positive">+50%</span>
+                            </span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">契約転換率</span>
+                            <span class="detail-value">100% (3件/3件)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h2 class="section-title">5月・6月比較</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>項目</th>
+                        <th>5月</th>
+                        <th>6月</th>
+                        <th>変化</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>給付費</td>
+                        <td>¥846,000</td>
+                        <td>¥858,000</td>
+                        <td class="comparison-positive">+¥12,000 (+1.4%)</td>
+                    </tr>
+                    <tr>
+                        <td>利用日数/目標</td>
+                        <td>141日/198日</td>
+                        <td>143日/189日</td>
+                        <td class="comparison-positive">+2日 (+1.4%)</td>
+                    </tr>
+                    <tr>
+                        <td>利用率</td>
+                        <td>71.2%</td>
+                        <td>75.7%</td>
+                        <td class="comparison-positive">+4.5%</td>
+                    </tr>
+                    <tr>
+                        <td>見学実施数</td>
+                        <td>2人</td>
+                        <td>3人</td>
+                        <td class="comparison-positive">+1人 (+50%)</td>
+                    </tr>
+                    <tr>
+                        <td>契約数</td>
+                        <td>0件</td>
+                        <td>3件</td>
+                        <td class="comparison-positive">+3件 (回復)</td>
+                    </tr>
+                    <tr>
+                        <td>契約率</td>
+                        <td>0%</td>
+                        <td>100%</td>
+                        <td class="comparison-positive">+100%</td>
+                    </tr>
+                    <tr>
+                        <td>退所者数</td>
+                        <td>0人</td>
+                        <td>0人</td>
+                        <td class="comparison-neutral">変動なし</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h2 class="section-title">6月度 目標達成率</h2>
+            <div class="progress-section">
+                <div class="progress-item">
+                    <label>見学見込み (達成率30%)</label>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar blue-bar" style="width: 30%;">3件/10件</div>
+                    </div>
+                </div>
+                <div class="progress-item">
+                    <label>見学実施 (達成率38%)</label>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar blue-bar" style="width: 38%;">3件/8件</div>
+                    </div>
+                </div>
+                <div class="progress-item">
+                    <label>契約数 (達成率75%)</label>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 75%;">3件/4件</div>
+                    </div>
+                </div>
+                <div class="progress-item">
+                    <label>利用日数 (達成率76%)</label>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 76%;">143日/189日</div>
+                    </div>
+                </div>
+            </div>
+            <h2 class="section-title">6月度 総評</h2>
+            <div class="summary-section">
+                <div class="summary-item">
+                    <h3>【成果】</h3>
+                    <p>6月は新規契約面で大きな改善が見られました。5月には0件だった契約数が3件に回復し、契約率も100%を達成しました。給付費も¥858,000と堅調に推移し、利用率も75.7%まで上昇しました。退所者も引き続き0人を維持し、安定した運営を続けています。</p>
+                </div>
+                <div class="summary-item">
+                    <h3>【課題】</h3>
+                    <p>見学見込み・見学実施数はまだ目標を下回っており、更なる営業活動の強化が必要です。生産活動も2ヶ月連続で実績がない状態が続いており、今後の活動再開に向けた計画策定が求められます。また、新規利用者のフォローアップ体制の構築も重要課題です。</p>
+                </div>
+                <div class="summary-item">
+                    <h3>【今後の展望】</h3>
+                    <p>6月の契約実績を踏まえ、見学から契約への転換率100%を維持しつつ、見学機会自体を増やす施策を展開します。新規契約者3名の定着支援に注力し、利用率80%達成を目指します。また、生産活動の再開に向けて、利用者様のニーズに合った新たな活動内容の検討を進めていきます。</p>
+                </div>
+            </div>
+            <div class="footer">
+                作成日:2025年7月3日 | メタゲーム西中島 島林
+            </div>
+        </div>
+    </div>
+    <script>
+// カスタムカーソル
+const cursor = document.getElementById("cursor");
+const amount = 8; // ドット数
+const sineDots = Math.floor(amount * 0.3);
+const width = 26;
+const idleTimeout = 150;
+let lastFrame = 0;
+let mousePosition = {x: window.innerWidth/2, y: window.innerHeight/2};
+let dots = [];
+let timeoutID;
+let idle = false;
+let rafId;
+class Dot {
+    constructor(index = 0) {
+        this.index = index;
+        this.anglespeed = 0.05;
+        this.x = mousePosition.x;
+        this.y = mousePosition.y;
+        this.scale = 1 - 0.07 * index;
+        this.range = width / 2 - width / 2 * this.scale + 2;
+        this.limit = width * 0.75 * this.scale;
+        this.element = document.createElement("span");
+        this.element.style.willChange = "transform";
+        TweenMax.set(this.element, {scale: this.scale});
+        cursor.appendChild(this.element);
+    }
+    lock() {
+        this.lockX = this.x;
+        this.lockY = this.y;
+        this.angleX = Math.PI * 2 * Math.random();
+        this.angleY = Math.PI * 2 * Math.random();
+    }
+    draw(delta) {
+        if (!idle || this.index <= sineDots) {
+            TweenMax.set(this.element, {x: this.x, y: this.y});
+        } else {
+            this.angleX += this.anglespeed;
+            this.angleY += this.anglespeed;
+            this.y = this.lockY + Math.sin(this.angleY) * this.range;
+            this.x = this.lockX + Math.sin(this.angleX) * this.range;
+            TweenMax.set(this.element, {x: this.x, y: this.y});
+        }
+    }
+}
+function init() {
+    window.addEventListener("mousemove", onMouseMove, {passive:true});
+    window.addEventListener("touchmove", onTouchMove, {passive:true});
+    buildDots();
+    rafId = requestAnimationFrame(render);
+}
+function startIdleTimer() {
+    timeoutID = setTimeout(goInactive, idleTimeout);
+    idle = false;
+}
+function resetIdleTimer() {
+    clearTimeout(timeoutID);
+    startIdleTimer();
+}
+function goInactive() {
+    idle = true;
+    for (let dot of dots) dot.lock();
+}
+function buildDots() {
+    for (let i = 0; i < amount; i++) {
+        let dot = new Dot(i);
+        dots.push(dot);
+    }
+}
+const onMouseMove = event => {
+    mousePosition.x = event.clientX - width / 2;
+    mousePosition.y = event.clientY - width / 2;
+    resetIdleTimer();
+};
+const onTouchMove = event => {
+    mousePosition.x = event.touches[0].clientX - width / 2;
+    mousePosition.y = event.touches[0].clientY - width / 2;
+    resetIdleTimer();
+};
+const render = timestamp => {
+    const delta = timestamp - lastFrame;
+    positionCursor(delta);
+    lastFrame = timestamp;
+    rafId = requestAnimationFrame(render);
+};
+const positionCursor = delta => {
+    let x = mousePosition.x;
+    let y = mousePosition.y;
+    for (let i = 0; i < dots.length; i++) {
+        let dot = dots[i];
+        let nextDot = dots[i + 1] || dots[0];
+        dot.x = x;
+        dot.y = y;
+        dot.draw(delta);
+        if (!idle || i <= sineDots) {
+            const dx = (nextDot.x - dot.x) * 0.35;
+            const dy = (nextDot.y - dot.y) * 0.35;
+            x += dx;
+            y += dy;
+        }
+    }
+};
+init();
+</script>
+</body>
+</html>

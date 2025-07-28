@@ -1,0 +1,56 @@
+{
+  "id": "262baf9c-3892-4d3f-978e-070f57fe5df9",
+  "title": "このファイルを同じ階層にコピーして",
+  "messages": [
+    {
+      "role": "user",
+      "content": {
+        "root": {
+          "children": [
+            {
+              "children": [
+                {
+                  "detail": 0,
+                  "format": 0,
+                  "mode": "normal",
+                  "style": "",
+                  "text": "このファイルを同じ階層にコピーして",
+                  "type": "text",
+                  "version": 1
+                }
+              ],
+              "direction": "ltr",
+              "format": "",
+              "indent": 0,
+              "type": "paragraph",
+              "version": 1,
+              "textFormat": 0,
+              "textStyle": ""
+            }
+          ],
+          "direction": "ltr",
+          "format": "",
+          "indent": 0,
+          "type": "root",
+          "version": 1
+        }
+      },
+      "promptContent": [
+        {
+          "type": "text",
+          "text": "\n\nこのファイルを同じ階層にコピーして\n\n"
+        }
+      ],
+      "id": "d5f16caf-9310-4947-90ff-f5c2dce364fc",
+      "mentionables": [
+        {
+          "type": "current-file",
+          "file": "Clippings/Smart Composer.md"
+        }
+      ]
+    }
+  ],
+  "createdAt": 1752639888116,
+  "updatedAt": 1752640360655,
+  "schemaVersion": 1
+}
