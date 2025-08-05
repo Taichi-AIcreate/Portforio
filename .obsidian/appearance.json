@@ -2,5 +2,9 @@
   "cssTheme": "Border",
   "theme": "moonstone",
   "textFontFamily": "Noto Sans JP",
-  "interfaceFontFamily": "Noto Sans JP"
+  "interfaceFontFamily": "Noto Sans JP",
+  "enabledCssSnippets": [
+    "dashboard",
+    "dashboard-clock"
+  ]
 }

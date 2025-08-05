@@ -1,0 +1,201 @@
+/* Atlas Dashboard CSS */
+/* ダッシュボード全体のスタイル */
+
+/* メインコンテナ */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* 時計ウィジェット */
+.clock-widget {
+  text-align: center;
+  padding: 30px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  color: white;
+  margin: 20px 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.clock-widget .time {
+  font-size: 4em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.clock-widget .date {
+  font-size: 1.4em;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+/* ダッシュボードグリッド */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin: 30px 0;
+}
+
+/* ウィジェットカード */
+.widget-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 20px;
+  margin: 10px 0;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.widget-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* カードタイトル */
+.widget-card h3 {
+  color: #667eea;
+  margin-bottom: 15px;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+/* リストスタイル */
+.widget-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.widget-card li {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+}
+
+.widget-card li:last-child {
+  border-bottom: none;
+}
+
+/* タスクリスト */
+.task-list {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 15px;
+  margin: 10px 0;
+}
+
+/* 統計カード */
+.stat-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 15px;
+  padding: 20px;
+  margin: 10px 0;
+  text-align: center;
+}
+
+/* 数学式のスタイル */
+.widget-card .math {
+  text-align: center;
+  font-size: 1.1em;
+  color: #667eea;
+}
+
+/* テーブルスタイル */
+.dataview.table-view-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+
+.dataview.table-view-table th,
+.dataview.table-view-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dataview.table-view-table th {
+  background: rgba(255, 255, 255, 0.1);
+  font-weight: 600;
+  color: #667eea;
+}
+
+/* チェックボックススタイル */
+.task-list-item-checkbox {
+  margin-right: 8px;
+}
+
+/* 絵文字とアイコン */
+.widget-card emoji {
+  font-size: 1.2em;
+  margin-right: 8px;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .clock-widget .time {
+    font-size: 2.5em;
+  }
+  
+  .clock-widget .date {
+    font-size: 1.1em;
+  }
+}
+
+/* ダークテーマ対応 */
+.theme-dark .widget-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.theme-dark .stat-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* アニメーション */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-container {
+  animation: fadeIn 0.8s ease-out;
+}
+
+/* カスタムスクロールバー */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(102, 126, 234, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(102, 126, 234, 0.7);
+}

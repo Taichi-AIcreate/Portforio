@@ -3,5 +3,6 @@
   "newFileLocation": "folder",
   "newFileFolderPath": "Notes",
   "attachmentFolderPath": "Config/Extra",
-  "alwaysUpdateLinks": true
+  "alwaysUpdateLinks": true,
+  "newLinkFormat": "shortest"
 }

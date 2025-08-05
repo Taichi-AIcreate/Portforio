@@ -4,5 +4,10 @@
   "obsidian-memos",
   "obsidian-hover-editor",
   "obsidian-icon-folder",
-  "typing-assistant"
+  "typing-assistant",
+  "templater-obsidian",
+  "obsidian-minimal-settings",
+  "table-editor-obsidian",
+  "dataview",
+  "terminal"
 ]

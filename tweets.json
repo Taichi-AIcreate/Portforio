@@ -1,0 +1,11 @@
+{
+  "posts": [],
+  "avatarUrl": "",
+  "userName": "あなた",
+  "userId": "@you",
+  "verified": false,
+  "aiGovernance": {
+    "minuteMap": {},
+    "dayMap": {}
+  }
+}

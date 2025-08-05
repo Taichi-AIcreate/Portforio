@@ -1,0 +1,97 @@
+/* 
+// Atlas Dashboard Clock JavaScript
+// リアルタイム時計機能
+
+(function() {
+    'use strict';
+    
+    // 時計の更新関数
+    function updateClock() {
+        const now = new Date();
+        
+        // 時間のフォーマット
+        const timeString = now.toLocaleTimeString('ja-JP', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        });
+        
+        // 日付のフォーマット
+        const dateString = now.toLocaleDateString('ja-JP', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        // 時計要素を更新
+        const timeElements = document.querySelectorAll('.clock-widget .time');
+        const dateElements = document.querySelectorAll('.clock-widget .date');
+        
+        timeElements.forEach(element => {
+            if (element) {
+                element.textContent = timeString;
+            }
+        });
+        
+        dateElements.forEach(element => {
+            if (element) {
+                element.textContent = dateString;
+            }
+        });
+    }
+    
+    // 初期化関数
+    function initDashboard() {
+        // 時計の初期更新
+        updateClock();
+        
+        // 1秒ごとに時計を更新
+        setInterval(updateClock, 1000);
+        
+        // ダッシュボードのアニメーション効果
+        const cards = document.querySelectorAll('.widget-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.style.animation = 'fadeIn 0.6s ease-out forwards';
+        });
+        
+        // ホバー効果の追加
+        addHoverEffects();
+    }
+    
+    // ホバー効果の追加
+    function addHoverEffects() {
+        const cards = document.querySelectorAll('.widget-card');
+        
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    }
+    
+    // ページ読み込み完了後に初期化
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    } else {
+        initDashboard();
+    }
+    
+    // Obsidianのページ変更を監視
+    if (window.app) {
+        const originalLoadActiveLeaf = window.app.workspace.loadActiveLeaf;
+        window.app.workspace.loadActiveLeaf = function(...args) {
+            const result = originalLoadActiveLeaf.apply(this, args);
+            setTimeout(initDashboard, 100);
+            return result;
+        };
+    }
+    
+})();
+*/
