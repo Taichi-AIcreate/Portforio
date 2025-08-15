@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メタゲーム西中島月次報告</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom-client.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/ogl@0.0.79/dist/ogl.umd.js"></script>
+    <script src="https://unpkg.com/three@0.157.0/build/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://assets.codepen.io/16327/InertiaPlugin.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* === 文字視認性向上のための外線追加 === */
+        h1, h2, .section-title, .card h2, .card .value, .summary-item h3, .summary-item p, table th, table td, p, .footer {
+            color: #374151 !important;
+            text-shadow:
+                0 0 2px rgba(0,0,0,0.06),
+                0 1px 4px rgba(0,0,0,0.04);
+        }
+        /* === ここまで追加 === */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            color: #333;
+            min-height: 100vh;
+            overflow-y: auto;
+            padding: 0;
+            margin: 0;
+            position: relative;
+            /* 落ち着いた単色の背景 */
+            background: #0e1116;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.32);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 35px;
+            border-radius: 25px;
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+            width: 100%;
+            max-width: 1000px;
+            position: relative;
+            margin: 20px auto 40px;
+            z-index: 2;
+            box-sizing: border-box;
+            overflow-y: visible;
+            display: block;
+            text-align: left;
+        }
+        h1 {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin: 0 0 40px 0;
+            font-size: 2.8em;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #fff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .section-title {
+            font-size: 1.6em;
+            margin: 40px 0 25px 0;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 0 0 40px 0;
+            width: 100%;
+            perspective: 1000px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 6px 24px 0 rgba(31, 38, 135, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: visible;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 0;
+            will-change: transform;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 25px;
+            padding: 2px;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .card:hover {
+            transform: translateY(-6px) scale(1.015) rotateX(1.2deg) rotateY(-1.2deg);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 18px 38px 0 rgba(0, 0, 0, 0.28), 0 1px 0 rgba(255, 255, 255, 0.15) inset;
+            z-index: 10;
+        }
+        .card:hover::before {
+            opacity: 1;
+        }
+        .card .value {
+            font-size: 2em;
+            margin: 12px 0;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+        }
+        .card .value.green {
+            color: #4ade80 !important;
+            text-shadow: 0 0 15px rgba(74, 222, 128, 0.25);
+        }
+        .card .value.red {
+            color: #f87171 !important;
+            text-shadow: 0 0 15px rgba(248, 113, 113, 0.25);
+        }
+        .card .value.blue {
+            color: #60a5fa !important;
+            text-shadow: 0 0 15px rgba(96, 165, 250, 0.25);
+        }
+        .card:hover .value {
+            transform: scale(1.05);
+        }
+        .card:hover h2 {
+            transform: translateY(-2px) translateZ(10px);
+        }
+        .card h2 {
+            font-size: 1.3em;
+            margin-top: 0;
+            color: rgba(255, 255, 255, 0.9);
+            transition: all 0.4s ease;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .card:hover h2 {
+            transform: translateY(-3px);
+            color: rgba(255, 255, 255, 1);
+        }
+        .card .popup-details {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(25px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 35px 0 rgba(31, 38, 135, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            width: 320px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+        .card:hover .popup-details {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(15px);
+        }
+        .popup-details h3 {
+            color: #1a1a1a;
+            margin: 0 0 20px 0;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        .popup-details p {
+            color: #333;
+            margin: 0 0 12px 0;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        .popup-details .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        .popup-details .detail-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .popup-details .detail-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .popup-details .detail-value {
+            color: #1a1a1a;
+            font-weight: 500;
+        }
+        .popup-details .trend {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-left: 10px;
+            font-weight: 500;
+        }
+        .popup-details .trend.positive {
+            background: rgba(74, 222, 128, 0.2);
+            color: #16a34a;
+        }
+        .popup-details .trend.negative {
+            background: rgba(248, 113, 113, 0.2);
+            color: #dc2626;
+        }
+        .popup-details .trend.neutral {
+            background: rgba(96, 165, 250, 0.2);
+            color: #2563eb;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 0 35px 0;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 6px 24px 0 rgba(31, 38, 135, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        th {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .progress-section {
+            margin: 0 0 40px 0;
+        }
+        .progress-item {
+            margin: 0 0 20px 0;
+        }
+        .progress-item label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+        .progress-bar-container {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 12px;
+            height: 28px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4ade80, #22c55e);
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-size: 0.9em;
+            line-height: 28px;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 1px 6px rgba(74, 222, 128, 0.25);
+            transition: all 0.3s ease;
+        }
+        .progress-bar.blue-bar {
+            background: linear-gradient(90deg, #60a5fa, #3b82f6);
+            box-shadow: 0 1px 6px rgba(96, 165, 250, 0.25);
+        }
+        .summary-section {
+            margin: 40px 0 0 0;
+        }
+        .summary-item {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 6px 24px 0 rgba(31, 38, 135, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            margin: 0 0 20px 0;
+            transition: all 0.3s ease;
+        }
+        .summary-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px 0 rgba(31, 38, 135, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        }
+        .summary-item h3 {
+            margin-top: 0;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.2em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .summary-item p {
+            margin: 0;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1.05em;
+        }
+        .footer {
+            text-align: right;
+            margin: 50px 0 0 0;
+            font-size: 0.95em;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+        p[style*="text-align: center"] {
+            margin: 0 0 40px 0;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+        .comparison-positive {
+            color: #16a34a !important;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(74, 222, 128, 0.18);
+        }
+        .comparison-negative {
+            color: #dc2626 !important;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(248, 113, 113, 0.18);
+        }
+        .comparison-neutral {
+            color: #2563eb !important;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(96, 165, 250, 0.18);
+        }
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+                border-radius: 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .grid-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .card {
+                padding: 20px;
+            }
+        }
+        #root { min-height: 100vh; }
+        .faulty-terminal-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+        /* floating background objects removed per request */
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-presets="env,react">
+        console.log('[App] bootstrap start');
+        const { useState, useEffect, useRef, useMemo, useCallback } = React;
+
+        // Faulty Terminal Component
+        function FaultyTerminal({
+            scale = 1,
+            gridMul = [2, 1],
+            digitSize = 1.5,
+            timeScale = 0.3,
+            pause = false,
+            scanlineIntensity = 0.3,
+            glitchAmount = 1,
+            flickerAmount = 1,
+            noiseAmp = 1,
+            chromaticAberration = 0,
+            dither = 0,
+            curvature = 0.2,
+            tint = "#ffffff",
+            mouseReact = true,
+            mouseStrength = 0.2,
+            dpr = Math.min(window.devicePixelRatio || 1, 2),
+            pageLoadAnimation = true,
+            brightness = 1,
+            className,
+            style,
+            ...rest
+        }) {
+            const containerRef = useRef(null);
+            const programRef = useRef(null);
+            const rendererRef = useRef(null);
+            const mouseRef = useRef({ x: 0.5, y: 0.5 });
+            const smoothMouseRef = useRef({ x: 0.5, y: 0.5 });
+            const frozenTimeRef = useRef(0);
+            const rafRef = useRef(0);
+            const loadAnimationStartRef = useRef(0);
+            const timeOffsetRef = useRef(Math.random() * 100);
+
+            const tintVec = useMemo(() => {
+                let h = tint.replace("#", "").trim();
+                if (h.length === 3)
+                    h = h
+                        .split("")
+                        .map((c) => c + c)
+                        .join("");
+                const num = parseInt(h, 16);
+                return [
+                    ((num >> 16) & 255) / 255,
+                    ((num >> 8) & 255) / 255,
+                    (num & 255) / 255,
+                ];
+            }, [tint]);
+
+            const ditherValue = useMemo(
+                () => (typeof dither === "boolean" ? (dither ? 1 : 0) : dither),
+                [dither]
+            );
+
+            const handleMouseMove = useCallback((e) => {
+                const ctn = containerRef.current;
+                if (!ctn) return;
+                const rect = ctn.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = 1 - (e.clientY - rect.top) / rect.height;
+                mouseRef.current = { x, y };
+            }, []);
+
+            useEffect(() => {
+                console.log('[FaultyTerminal] effect mount');
+                const ctn = containerRef.current;
+                if (!ctn) return;
+
+                const oglNS = window.ogl || window.OGL;
+                if (!oglNS) {
+                  console.error('[FaultyTerminal] OGL (ogl) が読み込まれていません。ネットワーク接続と CDN 読み込みを確認してください。');
+                  return;
+                }
+                const { Renderer, Program, Triangle, Color, Mesh } = oglNS;
+                
+                const renderer = new Renderer({ dpr });
+                rendererRef.current = renderer;
+                const gl = renderer.gl;
+                gl.clearColor(0, 0, 0, 1);
+
+                const geometry = new Triangle(gl);
+
+                const vertexShader = `
+attribute vec2 position;
+attribute vec2 uv;
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = vec4(position, 0.0, 1.0);
+}
+`;
+
+                const fragmentShader = `
+precision mediump float;
+
+varying vec2 vUv;
+
+uniform float iTime;
+uniform vec3  iResolution;
+uniform float uScale;
+
+uniform vec2  uGridMul;
+uniform float uDigitSize;
+uniform float uScanlineIntensity;
+uniform float uGlitchAmount;
+uniform float uFlickerAmount;
+uniform float uNoiseAmp;
+uniform float uChromaticAberration;
+uniform float uDither;
+uniform float uCurvature;
+uniform vec3  uTint;
+uniform vec2  uMouse;
+uniform float uMouseStrength;
+uniform float uUseMouse;
+uniform float uPageLoadProgress;
+uniform float uUsePageLoadAnimation;
+uniform float uBrightness;
+
+float time;
+
+float hash21(vec2 p){
+  p = fract(p * 234.56);
+  p += dot(p, p + 34.56);
+  return fract(p.x * p.y);
+}
+
+float noise(vec2 p)
+{
+  return sin(p.x * 10.0) * sin(p.y * (3.0 + sin(time * 0.090909))) + 0.2; 
+}
+
+mat2 rotate(float angle)
+{
+  float c = cos(angle);
+  float s = sin(angle);
+  return mat2(c, -s, s, c);
+}
+
+float fbm(vec2 p)
+{
+  p *= 1.1;
+  float f = 0.0;
+  float amp = 0.5 * uNoiseAmp;
+  
+  mat2 modify0 = rotate(time * 0.02);
+  f += amp * noise(p);
+  p = modify0 * p * 2.0;
+  amp *= 0.454545; // 1/2.2
+  
+  mat2 modify1 = rotate(time * 0.02);
+  f += amp * noise(p);
+  p = modify1 * p * 2.0;
+  amp *= 0.454545;
+  
+  mat2 modify2 = rotate(time * 0.08);
+  f += amp * noise(p);
+  
+  return f;
+}
+
+float pattern(vec2 p, out vec2 q, out vec2 r) {
+  vec2 offset1 = vec2(1.0);
+  vec2 offset0 = vec2(0.0);
+  mat2 rot01 = rotate(0.1 * time);
+  mat2 rot1 = rotate(0.1);
+  
+  q = vec2(fbm(p + offset1), fbm(rot01 * p + offset1));
+  r = vec2(fbm(rot1 * q + offset0), fbm(q + offset0));
+  return fbm(p + r);
+}
+
+float digit(vec2 p){
+    vec2 grid = uGridMul * 15.0;
+    vec2 s = floor(p * grid) / grid;
+    p = p * grid;
+    vec2 q, r;
+    float intensity = pattern(s * 0.1, q, r) * 1.3 - 0.03;
+    
+    if(uUseMouse > 0.5){
+        vec2 mouseWorld = uMouse * uScale;
+        float distToMouse = distance(s, mouseWorld);
+        float mouseInfluence = exp(-distToMouse * 8.0) * uMouseStrength * 10.0;
+        intensity += mouseInfluence;
+        
+        float ripple = sin(distToMouse * 20.0 - iTime * 5.0) * 0.1 * mouseInfluence;
+        intensity += ripple;
+    }
+    
+    if(uUsePageLoadAnimation > 0.5){
+        float cellRandom = fract(sin(dot(s, vec2(12.9898, 78.233))) * 43758.5453);
+        float cellDelay = cellRandom * 0.8;
+        float cellProgress = clamp((uPageLoadProgress - cellDelay) / 0.2, 0.0, 1.0);
+        
+        float fadeAlpha = smoothstep(0.0, 1.0, cellProgress);
+        intensity *= fadeAlpha;
+    }
+    
+    p = fract(p);
+    p *= uDigitSize;
+    
+    float px5 = p.x * 5.0;
+    float py5 = (1.0 - p.y) * 5.0;
+    float x = fract(px5);
+    float y = fract(py5);
+    
+    float i = floor(py5) - 2.0;
+    float j = floor(px5) - 2.0;
+    float n = i * i + j * j;
+    float f = n * 0.0625;
+    
+    float isOn = step(0.1, intensity - f);
+    float brightness = isOn * (0.2 + y * 0.8) * (0.75 + x * 0.25);
+    
+    return step(0.0, p.x) * step(p.x, 1.0) * step(0.0, p.y) * step(p.y, 1.0) * brightness;
+}
+
+float onOff(float a, float b, float c)
+{
+  return step(c, sin(iTime + a * cos(iTime * b))) * uFlickerAmount;
+}
+
+float displace(vec2 look)
+{
+    float y = look.y - mod(iTime * 0.25, 1.0);
+    float window = 1.0 / (1.0 + 50.0 * y * y);
+    return sin(look.y * 20.0 + iTime) * 0.0125 * onOff(4.0, 2.0, 0.8) * (1.0 + cos(iTime * 60.0)) * window;
+}
+
+vec3 getColor(vec2 p){
+    
+    float bar = step(mod(p.y + time * 20.0, 1.0), 0.2) * 0.4 + 1.0; // more efficient than ternary
+    bar *= uScanlineIntensity;
+    
+    float displacement = displace(p);
+    p.x += displacement;
+
+    if (uGlitchAmount != 1.0) {
+      float extra = displacement * (uGlitchAmount - 1.0);
+      p.x += extra;
+    }
+
+    float middle = digit(p);
+    
+    const float off = 0.002;
+    float sum = digit(p + vec2(-off, -off)) + digit(p + vec2(0.0, -off)) + digit(p + vec2(off, -off)) +
+                digit(p + vec2(-off, 0.0)) + digit(p + vec2(0.0, 0.0)) + digit(p + vec2(off, 0.0)) +
+                digit(p + vec2(-off, off)) + digit(p + vec2(0.0, off)) + digit(p + vec2(off, off));
+    
+    vec3 baseColor = vec3(0.9) * middle + sum * 0.1 * vec3(1.0) * bar;
+    return baseColor;
+}
+
+vec2 barrel(vec2 uv){
+  vec2 c = uv * 2.0 - 1.0;
+  float r2 = dot(c, c);
+  c *= 1.0 + uCurvature * r2;
+  return c * 0.5 + 0.5;
+}
+
+void main() {
+    time = iTime * 0.333333;
+    vec2 uv = vUv;
+
+    if(uCurvature != 0.0){
+      uv = barrel(uv);
+    }
+    
+    vec2 p = uv * uScale;
+    vec3 col = getColor(p);
+
+    if(uChromaticAberration != 0.0){
+      vec2 ca = vec2(uChromaticAberration) / iResolution.xy;
+      col.r = getColor(p + ca).r;
+      col.b = getColor(p - ca).b;
+    }
+
+    col *= uTint;
+    col *= uBrightness;
+
+    if(uDither > 0.0){
+      float rnd = hash21(gl_FragCoord.xy);
+      col += (rnd - 0.5) * (uDither * 0.003922);
+    }
+
+    gl_FragColor = vec4(col, 1.0);
+}
+`;
+
+                const program = new Program(gl, {
+                    vertex: vertexShader,
+                    fragment: fragmentShader,
+                    uniforms: {
+                        iTime: { value: 0 },
+                        iResolution: {
+                            value: new Color(
+                                gl.canvas.width,
+                                gl.canvas.height,
+                                gl.canvas.width / gl.canvas.height
+                            ),
+                        },
+                        uScale: { value: scale },
+                        uGridMul: { value: new Float32Array(gridMul) },
+                        uDigitSize: { value: digitSize },
+                        uScanlineIntensity: { value: scanlineIntensity },
+                        uGlitchAmount: { value: glitchAmount },
+                        uFlickerAmount: { value: flickerAmount },
+                        uNoiseAmp: { value: noiseAmp },
+                        uChromaticAberration: { value: chromaticAberration },
+                        uDither: { value: ditherValue },
+                        uCurvature: { value: curvature },
+                        uTint: { value: new Color(tintVec[0], tintVec[1], tintVec[2]) },
+                        uMouse: {
+                            value: new Float32Array([
+                                smoothMouseRef.current.x,
+                                smoothMouseRef.current.y,
+                            ]),
+                        },
+                        uMouseStrength: { value: mouseStrength },
+                        uUseMouse: { value: mouseReact ? 1 : 0 },
+                        uPageLoadProgress: { value: pageLoadAnimation ? 0 : 1 },
+                        uUsePageLoadAnimation: { value: pageLoadAnimation ? 1 : 0 },
+                        uBrightness: { value: brightness },
+                    },
+                });
+                programRef.current = program;
+
+                const mesh = new Mesh(gl, { geometry, program });
+
+                function resize() {
+                    if (!ctn || !renderer) return;
+                    renderer.setSize(ctn.offsetWidth, ctn.offsetHeight);
+                    program.uniforms.iResolution.value = new Color(
+                        gl.canvas.width,
+                        gl.canvas.height,
+                        gl.canvas.width / gl.canvas.height
+                    );
+                }
+
+                let resizeObserver = null;
+                if (window.ResizeObserver) {
+                  resizeObserver = new ResizeObserver(() => resize());
+                  resizeObserver.observe(ctn);
+                } else {
+                  window.addEventListener('resize', resize, { passive: true });
+                }
+                resize();
+
+                const update = (t) => {
+                    rafRef.current = requestAnimationFrame(update);
+
+                    if (pageLoadAnimation && loadAnimationStartRef.current === 0) {
+                        loadAnimationStartRef.current = t;
+                    }
+
+                    if (!pause) {
+                        const elapsed = (t * 0.001 + timeOffsetRef.current) * timeScale;
+                        program.uniforms.iTime.value = elapsed;
+                        frozenTimeRef.current = elapsed;
+                    } else {
+                        program.uniforms.iTime.value = frozenTimeRef.current;
+                    }
+
+                    if (pageLoadAnimation && loadAnimationStartRef.current > 0) {
+                        const animationDuration = 2000;
+                        const animationElapsed = t - loadAnimationStartRef.current;
+                        const progress = Math.min(animationElapsed / animationDuration, 1);
+                        program.uniforms.uPageLoadProgress.value = progress;
+                    }
+
+                    if (mouseReact) {
+                        const dampingFactor = 0.08;
+                        const smoothMouse = smoothMouseRef.current;
+                        const mouse = mouseRef.current;
+                        smoothMouse.x += (mouse.x - smoothMouse.x) * dampingFactor;
+                        smoothMouse.y += (mouse.y - smoothMouse.y) * dampingFactor;
+
+                        const mouseUniform = program.uniforms.uMouse.value;
+                        mouseUniform[0] = smoothMouse.x;
+                        mouseUniform[1] = smoothMouse.y;
+                    }
+
+                    renderer.render({ scene: mesh });
+                };
+                rafRef.current = requestAnimationFrame(update);
+                ctn.appendChild(gl.canvas);
+
+                if (mouseReact) window.addEventListener("mousemove", handleMouseMove, { passive: true });
+
+                return () => {
+                    cancelAnimationFrame(rafRef.current);
+                    if (resizeObserver) {
+                      resizeObserver.disconnect();
+                    } else {
+                      window.removeEventListener('resize', resize);
+                    }
+                    if (mouseReact) window.removeEventListener("mousemove", handleMouseMove);
+                    if (gl.canvas.parentElement === ctn) ctn.removeChild(gl.canvas);
+                    var lose = gl.getExtension('WEBGL_lose_context');
+                    if (lose && typeof lose.loseContext === 'function') {
+                      try { lose.loseContext(); } catch (e) {}
+                    }
+                    loadAnimationStartRef.current = 0;
+                    timeOffsetRef.current = Math.random() * 100;
+                };
+            }, [
+                dpr,
+                pause,
+                timeScale,
+                scale,
+                gridMul,
+                digitSize,
+                scanlineIntensity,
+                glitchAmount,
+                flickerAmount,
+                noiseAmp,
+                chromaticAberration,
+                ditherValue,
+                curvature,
+                tintVec,
+                mouseReact,
+                mouseStrength,
+                pageLoadAnimation,
+                brightness,
+                handleMouseMove,
+            ]);
+
+            return (
+                <div
+                    ref={containerRef}
+                    className={`w-full h-full ${className || ''}`}
+                    style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden', ...(style || {}) }}
+                    {...rest}
+                />
+            );
+        }
+
+        // Ballpit (ReactBits MCP adapted)
+        function Ballpit({ className = "", followCursor = true, count = 220, colors = [0x7dd3fc, 0xfca5a5, 0xfde68a, 0x86efac, 0xd8b4fe] }) {
+          const canvasRef = React.useRef(null);
+          const instanceRef = React.useRef(null);
+          React.useEffect(() => {
+            const canvas = canvasRef.current; if (!canvas || !window.THREE) return;
+            // Minimal re-creation using provided createBallpit flow
+            const THREE = window.THREE;
+            // createBallpit from MCP requires the classes above, but we embed a simplified init here
+            // For brevity, rely on MCP-ported createBallpit via inline adapted code if available; otherwise noop
+            try {
+              // @ts-ignore
+              instanceRef.current = createBallpit(canvas, { count, colors, followCursor });
+            } catch (e) {
+              console.warn('Ballpit init fallback', e);
+            }
+            return () => { try { instanceRef.current?.dispose?.(); } catch(_){} };
+          }, [count, followCursor, colors]);
+          return <canvas className={`${className} w-full h-full`} ref={canvasRef} />;
+        }
+
+        // Main App Component
+        function App() {
+            return (
+                <div className="relative w-full h-full">
+                    {/* Ballpit Background */}
+                    <div className="faulty-terminal-background" style={{zIndex: 0}}>
+                        <Ballpit colors={[0x7dd3fc, 0xfca5a5, 0xfde68a, 0x86efac, 0xd8b4fe]} count={220} followCursor={true} />
+                    </div>
+                    
+                    {/* Floating objects removed */}
+
+                    {/* Content Container */}
+                    <div className="container" style={{maxWidth: '1000px'}}>
+                        <h1>メタゲーム西中島月次報告</h1>
+                        <div id="july-content">
+                            <p style={{textAlign: 'center', color: '#555'}}>2025年7月1日~7月31日</p>
+                            <h2 className="section-title">7月度 運営状況</h2>
+                            <div className="grid-container">
+                                <div className="card">
+                                    <h2>稼働率</h2>
+                                    <div className="value green">89.4%</div>
+                                    <div className="popup-details">
+                                        <h3>稼働率の詳細</h3>
+                                        <div className="detail-item">
+                                            <span className="detail-label">利用数</span>
+                                            <span className="detail-value">210日</span>
+                                        </div>
+                                        <div className="detail-item">
+                                            <span className="detail-label">目標</span>
+                                            <span className="detail-value">235日</span>
+                                        </div>
+                                        <div className="detail-item">
+                                            <span className="detail-label">最大稼働率</span>
+                                            <span className="detail-value">89.4% (210日/235日)</span>
+                                        </div>
+                                        <div className="detail-item">
+                                            <span className="detail-label">前月比</span>
+                                            <span className="detail-value">
+                                                +13.7%
+                                                <span className="trend positive">大幅改善</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card">
+                                    <h2>給付費</h2>
+                                    <div className="value green">¥1,426,845</div>
+                                    <div className="popup-details">
+                                        <h3>給付費の詳細</h3>
+                                        <div className="detail-item">
+                                            <span className="detail-label">総売上</span>
+                                            <span className="detail-value">¥1,426,845</span>
+                                        </div>
+                                        <div className="detail-item">
+                                            <span className="detail-label">前月比</span>
+                                            <span className="detail-value">
+                                                +¥568,845
+                                                <span className="trend positive">+66.3%</span>
+                                            </span>
+                                        </div>
+                                        <div className="detail-item">
+                                            <span className="detail-label">前年同月比</span>
+                                            <span className="detail-value">
+                                                +¥736,845
+                                                <span className="trend positive">+106.8%</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card">
+                                    <h2>生産活動費</h2>
+                                    <div className="value red">¥0</div>
+                                    <div className="popup-details">
+                                        <h3>生産活動費の詳細</h3>
+                                        <div className="detail-item">
+                                            <span className="detail-label">前月比</span>
+                                            <span className="detail-value">
+                                                ±¥0
+                                                <span className="trend neutral">変動なし</span>
+                                            </span>
+                                        </div>
+                                        <div className="detail-item">
+                                            <span className="detail-label">備考</span>
+                                            <span className="detail-value">7月も生産活動なし</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card">
+                                    <h2>退所者数</h2>
+                                    <div className="value blue">0人</div>
+                                    <div className="popup-details">
+                                        <h3>退所者数の詳細</h3>
+                                        <div className="detail-item">
+                                            <span className="detail-label">前月比</span>
+                                            <span className="detail-value">
+                                                0人
+                                                <span className="trend neutral">変動なし</span>
+                                            </span>
+                                        </div>
+                                        <div className="detail-item">
+                                            <span className="detail-label">年間累計</span>
+                                            <span className="detail-value">0人</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card">
+                                    <h2>新規契約者</h2>
+                                    <div className="value green">3名</div>
+                                    <div className="popup-details">
+                                        <h3>新規契約者の詳細</h3>
+                                        <div className="detail-item">
+                                            <span className="detail-label">契約率</span>
+                                            <span className="detail-value">
+                                                100%
+                                                <span className="trend positive">維持</span>
+                                            </span>
+                                        </div>
+                                        <div className="detail-item">
+                                            <span className="detail-label">前月比</span>
+                                            <span className="detail-value">
+                                                ±0名
+                                                <span className="trend neutral">維持</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card">
+                                    <h2>体験・見学人数</h2>
+                                    <div className="value green">3名</div>
+                                    <div className="popup-details">
+                                        <h3>体験・見学の詳細</h3>
+                                        <div className="detail-item">
+                                            <span className="detail-label">見学実施率</span>
+                                            <span className="detail-value">38% (3件/8件)</span>
+                                        </div>
+                                        <div className="detail-item">
+                                            <span className="detail-label">前月比</span>
+                                            <span className="detail-value">
+                                                ±0名
+                                                <span className="trend neutral">維持</span>
+                                            </span>
+                                        </div>
+                                        <div className="detail-item">
+                                            <span className="detail-label">契約転換率</span>
+                                            <span className="detail-value">100% (3件/3件)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h2 className="section-title">6月・7月比較</h2>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>項目</th>
+                                        <th>6月</th>
+                                        <th>7月</th>
+                                        <th>変化</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>給付費</td>
+                                        <td>¥858,000</td>
+                                        <td>¥1,426,845</td>
+                                        <td className="comparison-positive">+¥568,845 (+66.3%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>利用日数/目標</td>
+                                        <td>143日/189日</td>
+                                        <td>210日/235日</td>
+                                        <td className="comparison-positive">+67日 (+46.9%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>利用率</td>
+                                        <td>75.7%</td>
+                                        <td>89.4%</td>
+                                        <td className="comparison-positive">+13.7%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>見学実施数</td>
+                                        <td>3人</td>
+                                        <td>3人</td>
+                                        <td className="comparison-neutral">±0人 (維持)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>契約数</td>
+                                        <td>3件</td>
+                                        <td>3件</td>
+                                        <td className="comparison-neutral">±0件 (維持)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>契約率</td>
+                                        <td>100%</td>
+                                        <td>100%</td>
+                                        <td className="comparison-neutral">維持</td>
+                                    </tr>
+                                    <tr>
+                                        <td>退所者数</td>
+                                        <td>0人</td>
+                                        <td>0人</td>
+                                        <td className="comparison-neutral">変動なし</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <h2 className="section-title">7月度 目標達成率</h2>
+                            <div className="progress-section">
+                                <div className="progress-item">
+                                    <label>見学見込み (達成率30%)</label>
+                                    <div className="progress-bar-container">
+                                        <div className="progress-bar blue-bar" style={{width: '30%'}}>3件/10件</div>
+                                    </div>
+                                </div>
+                                <div className="progress-item">
+                                    <label>見学実施 (達成率38%)</label>
+                                    <div className="progress-bar-container">
+                                        <div className="progress-bar blue-bar" style={{width: '38%'}}>3件/8件</div>
+                                    </div>
+                                </div>
+                                <div className="progress-item">
+                                    <label>契約数 (達成率75%)</label>
+                                    <div className="progress-bar-container">
+                                        <div className="progress-bar" style={{width: '75%'}}>3件/4件</div>
+                                    </div>
+                                </div>
+                                <div className="progress-item">
+                                    <label>利用日数 (達成率89%)</label>
+                                    <div className="progress-bar-container">
+                                        <div className="progress-bar" style={{width: '89%'}}>210日/235日</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h2 className="section-title">7月度 総評</h2>
+                            <div className="summary-section">
+                                <div className="summary-item">
+                                    <h3>【成果】</h3>
+                                    <p>7月は給付費が¥1,426,845と大幅に増加し、前月比66.3%の成長を記録しました。利用率も89.4%まで上昇し、6月の75.7%から13.7ポイントの改善を達成しました。利用日数も210日と大幅に増加し、目標235日に対して89%の達成率を記録しています。新規契約者3名の定着も順調で、契約率100%を維持しています。</p>
+                                </div>
+                                <div className="summary-item">
+                                    <h3>【課題】</h3>
+                                    <p>見学見込み・見学実施数は6月と同様に目標を下回っており、営業活動の強化が引き続き必要です。生産活動も3ヶ月連続で実績がない状態が続いており、今後の活動再開に向けた計画策定が急務です。また、新規利用者の獲得と既存利用者の利用率向上の両面での取り組みが必要です。</p>
+                                </div>
+                                <div className="summary-item">
+                                    <h3>【今後の展望】</h3>
+                                    <p>7月の好調な実績を基盤に、利用率90%達成を目指します。見学から契約への転換率100%を維持しつつ、見学機会自体を増やす施策を展開します。給付費の大幅増加を継続し、年間目標の早期達成を目指します。また、生産活動の再開に向けて、利用者様のニーズに合った新たな活動内容の検討を進め、収益の多様化を図ります。</p>
+                                </div>
+                            </div>
+                            
+                            <div className="footer">
+                                作成日:2025年8月3日 | メタゲーム西中島 島林
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Render the app with React 18 (fallback to legacy render if needed)
+        const rootEl = document.getElementById('root');
+        if (ReactDOM.createRoot) {
+          const root = ReactDOM.createRoot(rootEl);
+          root.render(<App />);
+        } else {
+          ReactDOM.render(<App />, rootEl);
+        }
+    </script>
+</body>
+</html>

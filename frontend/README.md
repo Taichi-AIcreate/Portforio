@@ -1,70 +1,105 @@
-# Getting Started with Create React App
+# メタゲーム西中島月次報告 - React + Vite
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+このプロジェクトは、メタゲーム西中島の月次報告を表示するReactアプリケーションです。ReactBits MCPを使用したBallpit背景アニメーションと、美しいガラスモーフィズムUIを組み合わせています。
 
-## Available Scripts
+## 技術スタック
 
-In the project directory, you can run:
+- **React 19** + **TypeScript**
+- **Vite** - 高速なビルドツール
+- **Three.js** + **@react-three/fiber** - 3D背景アニメーション
+- **ReactBits MCP** - Ballpit背景コンポーネント
+- **TailwindCSS** - スタイリング
+- **GSAP** - アニメーション
 
-### `npm start`
+## 開発環境のセットアップ
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```bash
+# 依存関係のインストール
+npm install
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# 開発サーバーの起動
+npm run dev
 
-### `npm test`
+# ビルド
+npm run build
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# プレビュー
+npm run preview
+```
 
-### `npm run build`
+## GitHub Pagesでの公開
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+このプロジェクトはGitHub Pagesで自動デプロイされるように設定されています。
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 初回セットアップ
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. GitHubでリポジトリを作成
+2. ローカルリポジトリをGitHubにプッシュ
+3. GitHubリポジトリの設定で「Pages」を有効化
+4. ソースを「GitHub Actions」に設定
 
-### `npm run eject`
+### 自動デプロイ
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- `main`ブランチにプッシュすると自動的にビルド・デプロイされます
+- デプロイ先: `https://<USERNAME>.github.io/mynote/`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 設定ファイル
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- `vite.config.ts` - `base: "/mynote/"` を設定（リポジトリ名に合わせて変更）
+- `.github/workflows/deploy.yml` - GitHub Actionsワークフロー
+- `scripts/postbuild.cjs` - SPAルーティング用の404.html生成
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## プロジェクト構造
 
-## Learn More
+```
+frontend/
+├── src/
+│   ├── components/
+│   │   └── Backgrounds/
+│   │       └── Ballpit.tsx    # ReactBits MCP由来の背景コンポーネント
+│   ├── App.tsx                # メインアプリケーション
+│   ├── App.css               # スタイル（TailwindCSS + カスタムCSS）
+│   └── main.tsx              # エントリーポイント
+├── scripts/
+│   └── postbuild.cjs         # ビルド後スクリプト
+├── .github/workflows/
+│   └── deploy.yml            # GitHub Actions設定
+├── vite.config.ts            # Vite設定
+└── tailwind.config.js        # TailwindCSS設定
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 特徴
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **美しい背景アニメーション**: ReactBits MCPのBallpitコンポーネントを使用
+- **レスポンシブデザイン**: モバイル・デスクトップ対応
+- **ガラスモーフィズムUI**: モダンな半透明エフェクト
+- **TypeScript**: 型安全性の確保
+- **自動デプロイ**: GitHub Actionsによる継続的デプロイ
 
-### Code Splitting
+## 開発者向け情報
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### ReactBits MCPの使用
 
-### Analyzing the Bundle Size
+このプロジェクトではReactBits MCPを使用してBallpit背景コンポーネントを取得しています：
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```typescript
+// MCPから取得したコンポーネントを使用
+import Ballpit from './components/Backgrounds/Ballpit';
 
-### Making a Progressive Web App
+// 使用例
+<Ballpit 
+  followCursor={true}
+  colors={[0x7dd3fc, 0xfca5a5, 0xfde68a, 0x86efac, 0xd8b4fe]}
+  count={220}
+/>
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### カスタマイズ
 
-### Advanced Configuration
+- 背景色やアニメーション設定は`Ballpit`コンポーネントのpropsで調整可能
+- スタイルは`src/App.css`でカスタマイズ可能
+- TailwindCSSクラスを組み合わせてレイアウトを調整
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## ライセンス
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+このプロジェクトはMITライセンスの下で公開されています。
